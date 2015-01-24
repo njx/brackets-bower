@@ -1,0 +1,42 @@
+<div class="bower-config">
+
+    <div class="header-section">
+        <div class="bower-title">{{Strings.PANEL_INSTALLED TIT}}</div>
+    </div>
+
+    <table class="bottom-panel-table table table-striped table-condensed">
+        <tbody>
+            {{#dependencies}}
+            <tr data-bower-dependency="{{ name }}">
+                <td>
+                    <div class="name bower-row-item">{{ name }}</div>
+                </td>
+                <td>
+                    <div class="version bower-row-item">({{ version }})</div>
+                </td>
+
+                <td>
+                    <div class="controls bower-row-item">
+                        <button class="btn btn-mini" data-bower-installed-action="delete" data-name="{{ name }}" title="{{Strings.DELETE}}">
+                            <span class="octicon octicon-x"></span>
+                        </button>
+                        <!--
+                        <button class="btn btn-mini" data-bower-installed-action="update" data-name="{{ name }}" title="{{Strings.UPDATE}}">
+                           <span class="octicon octicon-sync"></span>
+                        </button>
+                        -->
+                    </div>
+                </td>
+            </tr>
+            {{/dependencies}}
+
+            {{^dependencies}}
+            <tr>
+                <td>
+                    <span class="bower-row-item">{{ Strings.NO_PACKAGES}}</span>
+                </td>
+            </tr>
+            {{/dependencies}}
+        </tbody>
+    </table>
+</div>

@@ -74,7 +74,7 @@ define(function (require, exports, module) {
             key: KEY_INSTALL_FROM_BOWER
         });
 
-        var bowerDomainPath = ExtensionUtils.getModulePath(module, "/node/BowerDomain");
+        var bowerDomainPath = ExtensionUtils.getModulePath(module, "node/BowerDomain");
 
         Bower.init(bowerDomainPath);
 

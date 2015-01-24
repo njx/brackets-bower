@@ -108,11 +108,40 @@ maxerr: 50, node: true */
 
         config.cwd = path;
 
-        bower.commands.install([name], {}, config)
+        bower.commands.install([name], {save: true}, config)
             .on("end", function (installedPackages) {
                 var installedPackage = installedPackages[name];
 
                 cb(null, installedPackage.canonicalDir);
+            })
+            .on("error", function (error) {
+                cb(error ? error.message : "Unknown error", null);
+            });
+    }
+
+    /**
+     * Uninstalls the package with the given name.
+     * @param {string} path The path to the folder within which to install the package.
+     * @param {string} name Name of package to install.
+     * @param {object} config Key-value object to specify optional configuration.
+     * @param {function(?string, ?string)} cb Callback for when the installation is finished.
+     * First parameter is an error string, or null if no error, and second parameter is either
+     * the full installation path or null if there was an error.
+     */
+    function _cmdUnInstallPackage(path, name, config, cb) {
+        log.debug("Uninstalling " + name + " from " + path);
+
+        if (!config) {
+            config = {};
+        }
+
+        config.cwd = path;
+
+        bower.commands.uninstall([name], { save: true }, config)
+            .on("end", function (uninstalledPackages) {
+                var uninstalledPackage = uninstalledPackages[name];
+
+                cb(null, uninstalledPackage.canonicalDir);
             })
             .on("error", function (error) {
                 cb(error ? error.message : "Unknown error", null);
@@ -217,6 +246,32 @@ maxerr: 50, node: true */
 
         domainManager.registerCommand(
             DOMAIN_NAME,
+            "uninstallPackage",
+            _cmdUnInstallPackage,
+            true,
+            "Installs a package into a given folder.",
+            [{
+                name: "path",
+                type: "string",
+                description: "Path to folder into which to install the package"
+            }, {
+                name: "name",
+                type: "string",
+                description: "Name of package to install"
+            }, {
+                name: "config",
+                type: "object",
+                description: "Configuration object."
+            }],
+            [{
+                name: "installationPath",
+                type: "string",
+                description: "Path to the installed package."
+            }]
+        ); 
+
+       domainManager.registerCommand(
+            DOMAIN_NAME,
             "getConfiguration",
             _cmdGetConfiguration,
             true,
@@ -262,5 +317,6 @@ maxerr: 50, node: true */
     // For local unit testing (outside Brackets)
     exports._cmdGetPackages      = _cmdGetPackages;
     exports._cmdInstallPackage   = _cmdInstallPackage;
+    exports._cmdUnInstallPackage = _cmdUnInstallPackage;
     exports._cmdGetConfiguration = _cmdGetConfiguration;
 }());

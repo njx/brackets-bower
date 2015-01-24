@@ -42,5 +42,10 @@ define({
     "STATUS_ERROR_INSTALLING": "Error installing {0}",
     "TEXT_CLOSE": "Close",
     "GIT_NOT_FOUND_TITLE": "Git wasn't found on your system",
-    "GIT_NOT_FOUND_DESCRIPTION": "Brackets-bower extension searched for Git at the system PATH.\n\nBower requires Git installed, and configured in the system PATH variable, \nto download and install some packages.\nBrackets-bower extension may not work properly."
+    "GIT_NOT_FOUND_DESCRIPTION": "Brackets-bower extension searched for Git at the system PATH.\n\nBower requires Git installed, and configured in the system PATH variable, \nto download and install some packages.\nBrackets-bower extension may not work properly.",
+    "BUTTON_SHOW_CONFIG": "Configuration",
+    "BUTTON_SHOW_INSTALLED": "Installed",
+    "BUTTON_INSTALL_PACKAGE": "Install package",
+    "BUTTON_UPDATE_ALL": "Update all",
+    "PANEL_INSTALLED_TITLE": "Already installed packages"
 });

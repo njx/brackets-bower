@@ -29,13 +29,16 @@ maxerr: 50, browser: true */
 define(function (require, exports, module) {
     "use strict";
 
-    var Resizer           = brackets.getModule("utils/Resizer"),
-        WorkspaceManager  = brackets.getModule("view/WorkspaceManager"),
-        CommandManager    = brackets.getModule("command/CommandManager");
+    var Resizer            = brackets.getModule("utils/Resizer"),
+        WorkspaceManager   = brackets.getModule("view/WorkspaceManager"),
+        CommandManager     = brackets.getModule("command/CommandManager");
 
-    var Strings           = require("../strings"),
-        ConfigurationView = require("./ConfigurationView"),
-        panelTemplate     = require("text!../templates/panel.html");
+    var Strings            = require("../strings"),
+        ConfigurationView  = require("./ConfigurationView"),
+        InstalledView      = require("./InstalledView"),
+        PanelButtonsView   = require("./PanelButtonsView"),
+        panelTemplate      = require("text!../templates/panel.html"),
+        BowerConfiguration = require("src/bower/Configuration");
 
     var $panel,
         $bowerIcon,
@@ -46,7 +49,8 @@ define(function (require, exports, module) {
             ACTIVE: "active",
             WARNING: "warning"
         },
-        _currentStatusClass = bowerStatus.DEFAULT;
+        _currentStatusClass = bowerStatus.DEFAULT,
+        _currentview;
 
     function toggle() {
         if (isVisible) {
@@ -54,13 +58,13 @@ define(function (require, exports, module) {
 
             _setBowerIconStatus(_currentStatusClass);
 
-            ConfigurationView.hide();
+            _currentview.hide();
         } else {
             Resizer.show($panel);
 
             _setBowerIconStatus(bowerStatus.ACTIVE);
 
-            ConfigurationView.show();
+            showPanel();
         }
 
         isVisible = !isVisible;
@@ -81,6 +85,26 @@ define(function (require, exports, module) {
         _currentStatusClass = status;
 
         _setBowerIconStatus(status);
+    }
+
+    /**
+     * Check if there is a config file. 
+     * If not show the panel to create one.
+     * Else show the list of already installed packages
+     *
+     * @return {void}
+     */
+    function showPanel() {
+        BowerConfiguration.exists()
+            .done(function (path) {
+                InstalledView.show();
+                _currentview = InstalledView;
+            })
+            .fail(function() {
+                ConfigurationView.show();
+                _currentview = ConfigurationView;
+            })
+
     }
 
     /**
@@ -108,6 +132,8 @@ define(function (require, exports, module) {
         });
 
         ConfigurationView.render($("#brackets-bower-config"));
+        InstalledView.render($("#brackets-bower-installed"));
+        PanelButtonsView.render($("#brackets-bower-button-bar"));
     }
 
     exports.init        = init;

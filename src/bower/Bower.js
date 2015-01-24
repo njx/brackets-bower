@@ -46,6 +46,20 @@ define(function (require, exports) {
         return bowerDomain.exec("installPackage", path, packageName, config);
     }
 
+    function uninstall(path, packageName) {
+        // TODO: timeout if an install takes too long (maybe that should be in
+        // BowerDomain?)
+        console.log( 'bower.uninstall' );
+        var config  = Configuration.getDefaultConfiguration(),
+            promise = bowerDomain.exec("uninstallPackage", path, packageName, config);
+
+        promise.then(function(pkg) {
+            return pkg;
+        });
+
+        return promise;
+    }
+
     function search () {
         var config = Configuration.getDefaultConfiguration();
 
@@ -81,6 +95,7 @@ define(function (require, exports) {
 
     exports.init             = init;
     exports.install          = install;
+    exports.uninstall        = uninstall;
     exports.search           = search;
     exports.listCache        = listCache;
     exports.getConfiguration = getConfiguration;

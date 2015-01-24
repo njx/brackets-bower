@@ -31,6 +31,8 @@ define(function (require, exports) {
 
     var PreferencesManager = brackets.getModule("preferences/PreferencesManager"),
         ProjectManager     = brackets.getModule("project/ProjectManager"),
+        FileBower          = brackets.getModule("file/FileUtils"),
+        FileSystem         = brackets.getModule("filesystem/FileSystem"),
         FileUtils          = require("src/utils/FileUtils"),
         Event              = require("src/events/Events"),
         EventEmitter       = require("src/events/EventEmitter"),
@@ -142,6 +144,21 @@ define(function (require, exports) {
     }
 
     /**
+     * Load the content of the configurationfile
+     *
+     * @param  {string} path [description]
+     *
+     * @return {object}      Contant of the config file
+     */
+    function loadBowerJson( path ) {
+        path = (path || _getDefaultDirectory()) + FILE_NAME;
+
+        var file = FileSystem.getFileForPath( path );
+        var result = FileBower.readAsText( file, 'utf8' );
+        return result;
+    }
+
+    /**
      * Callback when the default preferences change. If the "proxy" preference has changed,
      * create the default configuration with the new value.
      * @param {Array} preferencesChanged Array of preferences keys that could have changed.
@@ -184,5 +201,7 @@ define(function (require, exports) {
     exports.remove                  = remove;
     exports.open                    = open;
     exports.reload                  = reload;
+    exports.getDirectory            = _getDefaultDirectory;
+    exports.loadBowerJson           = loadBowerJson;
     exports.getDefaultConfiguration = getDefaultConfiguration;
 });
